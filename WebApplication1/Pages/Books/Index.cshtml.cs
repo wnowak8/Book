@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,6 +14,7 @@ using WebApplication1.Models;
 //https://learn.microsoft.com/en-us/aspnet/core/data/ef-rp/sort-filter-page?view=aspnetcore-6.0#add-sorting
 namespace WebApplication1.Pages.Books
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly WebApplication1.Data.WebApplication1Context _context;
@@ -45,29 +47,6 @@ namespace WebApplication1.Pages.Books
 
         public async Task OnGetAsync(string sortOrder, string searchString)
         {
-            /*if (_context.Book != null)
-            {
-                Book = await _context.Book.ToListAsync();
-            }
-            // Use LINQ to get list of genres.
-            IQueryable<string> genreQuery = from m in _context.Book
-                                            orderby m.Genre
-                                            select m.Genre;
-
-            var books = from m in _context.Book
-                        select m;
-
-            if (!string.IsNullOrEmpty(SearchString))
-            {
-                books = books.Where(s => s.Title.Contains(SearchString));
-            }
-
-            if (!string.IsNullOrEmpty(BookGenre))
-            {
-                books = books.Where(x => x.Genre == BookGenre);
-            }
-            */
-
 
             // using System;
             TitleSort = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
@@ -127,9 +106,6 @@ namespace WebApplication1.Pages.Books
                     books = books.OrderBy(s => s.Title);
                     break;
             }
-
-
-            //Genres = new SelectList(await genreQuery.Distinct().ToListAsync());
             Book = await books.ToListAsync();
         }
     }

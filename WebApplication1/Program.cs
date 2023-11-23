@@ -8,6 +8,30 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<WebApplication1Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("WebApplication1Context") ?? throw new InvalidOperationException("Connection string 'WebApplication1Context' not found.")));
 
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = "MyCookieAuth"; // Domyœlny schemat autentykacji
+})
+.AddCookie("MyCookieAuth", options =>
+{
+    options.Cookie.Name = "MyCookieAuth";
+    options.LoginPath = "/A ccount/Login"; // Œcie¿ka do strony logowania
+    options.AccessDeniedPath = "/Account/AccessDenied"; // Œcie¿ka do strony odrzuconego dostêpu
+    // Inne konfiguracje...
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("MustBeAdmin", policy =>
+    {
+        policy.RequireClaim("Admin"); // Wymaga, aby u¿ytkownik mia³ rolê "Admin"
+    });
+
+    options.AddPolicy("MustBeUser", policy =>
+    {
+        policy.RequireClaim("User"); // Wymaga, aby u¿ytkownik mia³ rolê "Admin"
+    });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,6 +47,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
