@@ -26,7 +26,23 @@ namespace WebApplication1.Pages.Account
                 {
                     new Claim(ClaimTypes.Name, "admin"),
                     new Claim(ClaimTypes.Email, "admin@example.com"),
-                    new Claim("Admin", "true")
+                    new Claim("Admin", "true"),
+                    new Claim("User", "true")
+
+
+                };
+                var identity = new ClaimsIdentity(claims, "MyCookieAuth");
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                await HttpContext.SignInAsync("MyCookieAuth", principal);
+                return RedirectToPage("/Index");
+            }
+            if (Credential.Name == "user" && Credential.Password == "password")
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, "user"),
+                    new Claim(ClaimTypes.Email, "user@example.com"),
+                    new Claim("User", "true")
 
                 };
                 var identity = new ClaimsIdentity(claims, "MyCookieAuth");

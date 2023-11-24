@@ -16,7 +16,7 @@ builder.Services.AddAuthentication(options =>
 .AddCookie("MyCookieAuth", options =>
 {
     options.Cookie.Name = "MyCookieAuth";
-    options.LoginPath = "/A ccount/Login"; // Œcie¿ka do strony logowania
+    options.LoginPath = "/Account/Login"; // Œcie¿ka do strony logowania
     options.AccessDeniedPath = "/Account/AccessDenied"; // Œcie¿ka do strony odrzuconego dostêpu
     // Inne konfiguracje...
 });

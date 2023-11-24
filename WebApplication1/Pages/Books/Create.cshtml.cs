@@ -11,8 +11,8 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Pages.Books
 {
-    [Authorize]
-    public class CreateModel : PageModel
+    [Authorize(Policy = "MustBeUser")]
+public class CreateModel : PageModel
     {
         private readonly WebApplication1.Data.WebApplication1Context _context;
 

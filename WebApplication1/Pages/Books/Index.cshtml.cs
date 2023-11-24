@@ -14,7 +14,7 @@ using WebApplication1.Models;
 //https://learn.microsoft.com/en-us/aspnet/core/data/ef-rp/sort-filter-page?view=aspnetcore-6.0#add-sorting
 namespace WebApplication1.Pages.Books
 {
-    [Authorize]
+    [Authorize(Policy = "MustBeUser")]
     public class IndexModel : PageModel
     {
         private readonly WebApplication1.Data.WebApplication1Context _context;
