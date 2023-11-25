@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using WebApplication1.Data;
 using WebApplication1.Models;
 
-//https://www.facebook.com/watch/?v=309768009749378
-//https://learn.microsoft.com/en-us/aspnet/core/data/ef-rp/sort-filter-page?view=aspnetcore-6.0#add-sorting
+
 namespace WebApplication1.Pages.Books
 {
     [Authorize(Policy = "MustBeUser")]
@@ -47,8 +44,6 @@ namespace WebApplication1.Pages.Books
 
         public async Task OnGetAsync(string sortOrder, string searchString)
         {
-
-            // using System;
             TitleSort = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
             PriceSort = sortOrder == "Price" ? "price_desc" : "Price";
             YearOfPublicationSort = sortOrder == "YearOfPublication" ? "yearOfPublication_desc" : "YearOfPublication";

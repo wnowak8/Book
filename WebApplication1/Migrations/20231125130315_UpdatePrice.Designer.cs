@@ -11,7 +11,7 @@ using WebApplication1.Data;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(WebApplication1Context))]
-    [Migration("20231124103207_UpdatePrice")]
+    [Migration("20231125130315_UpdatePrice")]
     partial class UpdatePrice
     {
         /// <inheritdoc />
@@ -41,9 +41,8 @@ namespace WebApplication1.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<string>("Price")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Publisher")
                         .IsRequired()

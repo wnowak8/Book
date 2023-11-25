@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
@@ -13,7 +12,6 @@ namespace WebApplication1.Pages.Account
         public Credential Credential { get; set; }
         public void OnGet()
         {
-            //this.Credential = new Credential { Name = "admin" };
         }
 
         public async Task<IActionResult> OnPostAsync()

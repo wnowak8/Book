@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-//https://learn.microsoft.com/en-us/aspnet/core/tutorials/razor-pages/search?view=aspnetcore-7.0
+
 namespace WebApplication1.Models
 {
     public class Book
@@ -20,9 +20,11 @@ namespace WebApplication1.Models
         [RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$", ErrorMessage = "Invalid genre format.")]
         public string Genre { get; set; }
 
-        [Required(ErrorMessage = "Price is required.")]
-        [RegularExpression(@"^\d{1,4}\.\d{2}$", ErrorMessage = "Invalid price format. Use a dot (.) as the decimal separator and provide exactly two decimal places.")]
-        public string Price { get; set; }
+
+        [Required(ErrorMessage = "Price is required")]
+        [Range(typeof(decimal), "0.01", "100000.00", ErrorMessage = "The value must be greater than 0.")]
+        public decimal Price { get; set; }
+
 
         [Required(ErrorMessage = "Author is required.")]
         public string Author { get; set; }

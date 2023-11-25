@@ -1,49 +1,62 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using WebApplication1.Data;
+using System.Globalization;
+using Microsoft.Extensions.Options;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddDbContext<WebApplication1Context>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("WebApplication1Context") ?? throw new InvalidOperationException("Connection string 'WebApplication1Context' not found.")));
 
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en-US");
+    options.SupportedCultures = new List<CultureInfo> { new CultureInfo("en-US") };
+    options.SupportedUICultures = new List<CultureInfo> { new CultureInfo("en-US") };
+});
+
+builder.Services.AddDbContext<WebApplication1Context>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("WebApplication1Context") ?? throw new InvalidOperationException("Connection string 'WebApplication1Context' not found."));
+});
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = "MyCookieAuth"; // Domyœlny schemat autentykacji
+    options.DefaultScheme = "MyCookieAuth";
 })
 .AddCookie("MyCookieAuth", options =>
 {
     options.Cookie.Name = "MyCookieAuth";
-    options.LoginPath = "/Account/Login"; // Œcie¿ka do strony logowania
-    options.AccessDeniedPath = "/Account/AccessDenied"; // Œcie¿ka do strony odrzuconego dostêpu
-    // Inne konfiguracje...
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
 });
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("MustBeAdmin", policy =>
     {
-        policy.RequireClaim("Admin"); // Wymaga, aby u¿ytkownik mia³ rolê "Admin"
+        policy.RequireClaim("Admin");
     });
 
     options.AddPolicy("MustBeUser", policy =>
     {
-        policy.RequireClaim("User"); // Wymaga, aby u¿ytkownik mia³ rolê "Admin"
+        policy.RequireClaim("User");
     });
 });
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    // Domyœlna wartoœæ HSTS wynosi 30 dni. Mo¿esz to dostosowaæ do scenariuszy produkcyjnych, zobacz https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
 app.UseRouting();
 
@@ -51,5 +64,15 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+// db init
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<WebApplication1Context>();
+    context.Database.EnsureCreated();
+    DbInitializer.Initialize(context);
+}
 
 app.Run();
