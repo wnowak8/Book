@@ -27,11 +27,6 @@ namespace WebApplication1.Pages.Books
         [BindProperty(SupportsGet = true)]
         public string? SearchString { get; set; }
 
-        public SelectList? Genres { get; set; }
-
-        [BindProperty(SupportsGet = true)]
-        public string? BookGenre { get; set; }
-
         // Sort
         public string TitleSort { get; set; }
         public string YearOfPublicationSort { get; set; }
@@ -59,7 +54,10 @@ namespace WebApplication1.Pages.Books
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                books = books.Where(s => s.Title.Contains(searchString));
+                books = books.Where(s => s.Title.Contains(searchString) ||
+                         s.Author.Contains(searchString) ||
+                         s.Publisher.Contains(searchString) ||
+                         s.Genre.Contains(searchString));
             }
 
             switch (sortOrder)
